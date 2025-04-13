@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Form, Container } from 'react-bootstrap';
-import './LoginPage.css';  // Import the CSS file
+import { Button, Form } from 'react-bootstrap';  // Assuming you're using react-bootstrap
+import './LoginPage.css';  // Import the CSS file for custom styling
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -29,8 +29,8 @@ const LoginPage = ({ onLogin }) => {
   };
 
   return (
-    <Container className="login-page">
-      <div className="login-form p-4">
+    <div className="login-container">
+      <div className="login-form">
         <h2>Login</h2>
         {error && <div className="alert alert-danger">{error}</div>}
         <Form onSubmit={handleSubmit}>
@@ -59,7 +59,7 @@ const LoginPage = ({ onLogin }) => {
           </Button>
         </Form>
       </div>
-    </Container>
+    </div>
   );
 };
 
