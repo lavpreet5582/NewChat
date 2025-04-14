@@ -114,12 +114,6 @@ from datetime import timedelta
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  # Set access token to 7 days
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),  # Set refresh token to 30 days
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "ALGORITHM": "HS256",  # Can be changed based on your requirements
     "SIGNING_KEY": os.getenv("SECRET_KEY", "your-secret-key"),
-    "VERIFYING_KEY": None,
-    "AUDIENCE": None,
-    "ISSUER": None,
-    "JWK_URL": None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }

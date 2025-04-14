@@ -10,23 +10,44 @@ const LoginPage = ({ onLogin }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("http://localhost:8000/accounts/api/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!response.ok) {
-      setError("Invalid credentials or error during login.");
+    // Check if username and password are provided
+    if (!username || !password) {
+      setError("Username and password are required.");
       return;
     }
 
-    const data = await response.json();
-    localStorage.setItem("token", data.access);
-    onLogin();
+    try {
+      const response = await fetch("http://localhost:8000/accounts/api/token/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      // Check if the response is successful
+      if (!response.ok) {
+        setError("Invalid credentials or error during login.");
+        return;
+      }
+
+      const data = await response.json();
+
+      // Store tokens securely (consider storing refresh token too)
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh); // Optionally store the refresh token as well.
+
+      // Optionally handle token expiration or refresh mechanism
+      // You can also set a timer to refresh token before expiration
+
+      // Trigger successful login
+      onLogin();
+    } catch (error) {
+      console.error("Error during login:", error);
+      setError("An error occurred while logging in. Please try again later.");
+    }
   };
+
 
   return (
     <div className="login-container">

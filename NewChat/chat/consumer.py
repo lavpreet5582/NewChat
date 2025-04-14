@@ -1,3 +1,4 @@
+from django.utils import timezone
 import logging
 from urllib.parse import parse_qs
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -68,6 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "type": "chat_message",
                     "message": message,
                     "user": user.username,
+                    "timestamp": timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
                 },
             )
 
@@ -78,6 +80,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     "message": event["message"],
                     "user": event["user"],
+                    "timestamp": event["timestamp"],
                 }
             )
         )

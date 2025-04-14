@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './components/auth/LoginPage';
-import MessageList from './components/chat/MessageList';
-import MessageInput from './components/chat/MessageInput';
-import ChannelSwitcher from './components/chat/ChannelSwitcher';
+import { Container, Row, Col } from 'react-bootstrap';
+import Sidebar from './components/chat/Sidebar';
+import ChatWindow from './components/chat/ChatWindow';
+
+// import MessageList from './components/chat/MessageList';
+// import MessageInput from './components/chat/MessageInput';
+// import ChannelSwitcher from './components/chat/ChannelSwitcher';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -15,12 +19,12 @@ function App() {
 
   // Function to login and connect the socket
   const login = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access');
     if (!token) {
       console.error('No token found!');
       return;
     }
-    
+
     const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${channel}/?token=${token}`);
 
     newSocket.onopen = () => {
@@ -44,7 +48,7 @@ function App() {
   const sendMessage = () => {
     if (socket && message) {
       console.log("sending message to user ");
-      
+
       socket.send(JSON.stringify({ message }));
       setMessage('');
     }
@@ -60,7 +64,7 @@ function App() {
 
   // Manage socket and login logic using useEffect
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access");
     if (token && !isLoggedIn) {
       setIsLoggedIn(true);
     }
@@ -69,7 +73,6 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       login();
-      // fetchMessages(channel); // Fetch messages when login or channel changes
     }
     // Cleanup socket connection on component unmount or when channel changes
     return () => {
@@ -79,33 +82,6 @@ function App() {
     };
   }, [isLoggedIn, channel]); // Dependencies: login status and channel change
 
-  const fetchMessages = async (channel) => {
-    const token = localStorage.getItem("token"); // Get the token from localStorage
-
-    if (!token) {
-      console.error("No token found!");
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:8000/chat/api/messages/${channel}/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Include token in the Authorization header
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch messages");
-      }
-
-      const data = await response.json(); // Parse the response JSON
-      setMessages(data); // Set the fetched messages into state
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    }
-  };
 
   return (
     <div className={!isLoggedIn ? "login-page" : ""}>
@@ -113,10 +89,21 @@ function App() {
         <LoginPage onLogin={() => setIsLoggedIn(true)} />
       ) : (
         <>
-          <h2>Active Channel: {channel}</h2>
-          <ChannelSwitcher changeChannel={changeChannel} />
-          <MessageList messages={messages} />
-          <MessageInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          <Container fluid className="main-content">
+            <Row style={{ minHeight: '100vh' }}>
+              <Col md={3} className="sidebar border-end">
+                <Sidebar changeChannel={changeChannel} currentChannel={channel} />
+              </Col>
+              <Col md={9} className="chat-window">
+                <ChatWindow
+                  messages={messages}
+                  message={message}
+                  setMessage={setMessage}
+                  sendMessage={sendMessage}
+                />
+              </Col>
+            </Row>
+          </Container>
         </>
       )}
     </div>
