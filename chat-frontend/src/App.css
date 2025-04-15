@@ -9,77 +9,11 @@ html {
 
 /* Fullscreen container for centering content */
 /* App Container */
-.app-container {
+.main-container {
     display: flex;
-    flex-direction: column;
     height: 100%;
     justify-content: center;
-    /* Center the content vertically */
     align-items: center;
-    /* Center the content horizontally */
-}
-
-/* Main content container */
-.main-content {
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    height: 100vh;
-    /* Ensure it takes up the full height of the viewport */
-}
-
-/* Sidebar styling */
-.sidebar {
-    flex: 1;
-    border-right: 1px solid #ccc;
-    padding: 15px;
-    background-color: #f8f9fa;
-}
-
-/* Chat Window styling */
-.chat-window {
-    flex: 3;
-    /* Ensure it takes up 3 parts of the space */
-    display: flex;
-    flex-direction: column;
     padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Ensure messages take up remaining space inside the chat window */
-.chat-window .message-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0;
-    list-style-type: none;
-}
-
-/* Message input area styling */
-.chat-window .message-input {
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    background-color: #f8f9fa;
-}
-
-.chat-window .message-input input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-}
-
-.chat-window .message-input button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.chat-window .message-input button:hover {
-    background-color: #0056b3;
+    /* Space inside the border */
 }

@@ -5,6 +5,8 @@ import LoginPage from './components/auth/LoginPage';
 import { Container, Row, Col } from 'react-bootstrap';
 import Sidebar from './components/chat/Sidebar';
 import ChatWindow from './components/chat/ChatWindow';
+import Header from './components/chat/Header';
+import Footer from './components/chat/Footer';
 
 // import MessageList from './components/chat/MessageList';
 // import MessageInput from './components/chat/MessageInput';
@@ -88,23 +90,19 @@ function App() {
       {!isLoggedIn ? (
         <LoginPage onLogin={() => setIsLoggedIn(true)} />
       ) : (
-        <>
-          <Container fluid className="main-content">
-            <Row style={{ minHeight: '100vh' }}>
-              <Col md={3} className="sidebar border-end">
-                <Sidebar changeChannel={changeChannel} currentChannel={channel} />
-              </Col>
-              <Col md={9} className="chat-window">
-                <ChatWindow
-                  messages={messages}
-                  message={message}
-                  setMessage={setMessage}
-                  sendMessage={sendMessage}
-                />
-              </Col>
-            </Row>
+        <div className='app-container'>
+          <Header />
+          <Container fluid className="main-container">
+            <Sidebar changeChannel={changeChannel} currentChannel={channel} />
+            <ChatWindow
+              messages={messages}
+              message={message}
+              setMessage={setMessage}
+              sendMessage={sendMessage}
+            />
           </Container>
-        </>
+          <Footer />
+        </div>
       )}
     </div>
   );
