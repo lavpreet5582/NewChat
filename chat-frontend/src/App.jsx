@@ -3,10 +3,10 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './components/auth/LoginPage';
 import { Container, Row, Col } from 'react-bootstrap';
-import Sidebar from './components/chat/Sidebar';
-import ChatWindow from './components/chat/ChatWindow';
-import Header from './components/chat/Header';
-import Footer from './components/chat/Footer';
+import Sidebar from './components/chat-components/Sidebar';
+import ChatWindow from './components/chat-components/ChatWindow';
+import Header from './components/chat-components/Header';
+import Footer from './components/chat-components/Footer';
 
 // import MessageList from './components/chat/MessageList';
 // import MessageInput from './components/chat/MessageInput';
