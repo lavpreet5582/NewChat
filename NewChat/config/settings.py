@@ -9,6 +9,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+TIME_ZONE = "Asia/Kolkata"
+USE_TZ = True  # Keep this True if you're using timezone-aware datetimes
+
 CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -34,6 +37,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
+    'rest_framework_simplejwt.token_blacklist',
     "channels",
     "accounts",
     "chat",
@@ -115,5 +119,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  # Set access token to 7 days
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),  # Set refresh token to 30 days
     "SIGNING_KEY": os.getenv("SECRET_KEY", "your-secret-key"),
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }

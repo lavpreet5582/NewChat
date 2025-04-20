@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';  // Assuming you're using react-bootstrap
 import './LoginPage.css';  // Import the CSS file for custom styling
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,6 +44,7 @@ const LoginPage = ({ onLogin }) => {
 
       // Trigger successful login
       onLogin();
+      navigate('/chat')
     } catch (error) {
       console.error("Error during login:", error);
       setError("An error occurred while logging in. Please try again later.");

@@ -19,6 +19,10 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    timestamp = serializers.SerializerMethodField()
+
+    def get_timestamp(self, obj):
+        return localtime(obj.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Message
