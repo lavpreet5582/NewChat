@@ -1,0 +1,11 @@
+.navbar {
+    border-bottom: 1px solid #dee2e6;
+}
+
+#dropdown-avatar {
+    cursor: pointer;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
