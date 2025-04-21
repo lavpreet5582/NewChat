@@ -1,21 +1,21 @@
 export const getAccessToken = () => localStorage.getItem("access");
-export const getRefreshToken = () => localStorage.getItem("refresh");
 
 export const refreshToken = async () => {
-  const refresh = getRefreshToken();
   const res = await fetch("http://localhost:8000/api/token/refresh/", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refresh }),
+    credentials: "include", // ✅ Send cookies including HttpOnly refresh token
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   if (res.ok) {
     const data = await res.json();
-    localStorage.setItem("access", data.access);
+    localStorage.setItem("access", data.access); // Only access token is returned
     return data.access;
   } else {
     localStorage.clear();
-    window.location.href = "/"; // logout to login
+    window.location.href = "/"; // force logout
   }
 };
 

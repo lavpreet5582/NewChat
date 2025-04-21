@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import Footer from './Footer';
 
-const ChatPage = ({ username }) => {
+const ChatPage = ({ username, isLoggedIn, setIsLoggedIn }) => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [socket, setSocket] = useState(null);
@@ -16,7 +16,6 @@ const ChatPage = ({ username }) => {
     const connectSocket = (channel) => {
         const token = localStorage.getItem('access');
         if (!token) return;
-
         // Create a new WebSocket connection
         const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${channel}/?token=${token}`);
 
@@ -72,7 +71,7 @@ const ChatPage = ({ username }) => {
 
     return (
         <div className="app-container">
-            <Header isLoggedIn={true} username={username} />
+            <Header isLoggedIn={isLoggedIn} username={username} setIsLoggedIn={setIsLoggedIn} />
             <Container fluid className="main-container">
                 <Sidebar changeChannel={changeChannel} currentChannel={channel} />
                 <ChatWindow

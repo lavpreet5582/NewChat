@@ -20,17 +20,6 @@ class ChannelListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-# 2️⃣ Retrieve messages from a specific channel
-class ChannelMessagesView(generics.ListAPIView):
-    """API to retrieve all messages from a specific channel"""
-
-    serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        channel = get_object_or_404(Channel, name=self.kwargs["channel_name"])
-        return Message.objects.filter(channel=channel).order_by("timestamp")
-
 
 # 3️⃣ Send a message to a channel
 class SendMessageView(APIView):

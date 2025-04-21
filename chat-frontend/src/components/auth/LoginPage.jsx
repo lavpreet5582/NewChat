@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';  // Assuming you're using react-bootstrap
-import './LoginPage.css';  // Import the CSS file for custom styling
+import { Button, Form } from 'react-bootstrap';
+import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Check if username and password are provided
     if (!username || !password) {
       setError("Username and password are required.");
       return;
@@ -24,10 +23,10 @@ const LoginPage = ({ onLogin }) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // ⬅️ Important for HttpOnly cookies
         body: JSON.stringify({ username, password }),
       });
 
-      // Check if the response is successful
       if (!response.ok) {
         setError("Invalid credentials or error during login.");
         return;
@@ -35,22 +34,17 @@ const LoginPage = ({ onLogin }) => {
 
       const data = await response.json();
 
-      // Store tokens securely (consider storing refresh token too)
+      // Store only the access token
       localStorage.setItem("access", data.access);
-      localStorage.setItem("refresh", data.refresh); // Optionally store the refresh token as well.
-
-      // Optionally handle token expiration or refresh mechanism
-      // You can also set a timer to refresh token before expiration
 
       // Trigger successful login
       onLogin();
-      navigate('/chat')
+      navigate('/chat');
     } catch (error) {
       console.error("Error during login:", error);
       setError("An error occurred while logging in. Please try again later.");
     }
   };
-
 
   return (
     <div className="login-container">
@@ -82,6 +76,10 @@ const LoginPage = ({ onLogin }) => {
             Login
           </Button>
         </Form>
+        <div className="mt-3 text-center">
+          <span>Don't have an account? </span>
+          <a href="/signup">Signup</a>
+        </div>
       </div>
     </div>
   );

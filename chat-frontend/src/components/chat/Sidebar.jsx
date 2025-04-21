@@ -35,19 +35,6 @@ const Sidebar = ({ changeChannel, currentChannel }) => {
     };
     return (
         <div className='sidebar'>
-
-            {/* <ListGroup variant="flush">
-                {channels.map((ch) => (
-                    <ListGroup.Item
-                        key={ch?.id}
-                        action
-                        active={ch.name === currentChannel}
-                        onClick={() => changeChannel(ch.name)}
-                    >
-                        {ch.name}
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>*/}
             <div className="p-3">
                 <h5 className="mb-3">Channels</h5>
                 <ListGroup>

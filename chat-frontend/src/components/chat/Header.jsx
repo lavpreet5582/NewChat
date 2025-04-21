@@ -5,13 +5,11 @@ import { Navbar, Container, Dropdown } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import './Header.css';
 
-const Header = ({ isLoggedIn, username }) => {
+const Header = ({ isLoggedIn, username, setIsLoggedIn }) => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         const token = localStorage.getItem('access');
-        const refresh_token = localStorage.getItem('refresh')
-
         try {
             // Optional: Call backend logout endpoint
             const response = await fetch('http://localhost:8000/accounts/api/logout/', {
@@ -20,7 +18,7 @@ const Header = ({ isLoggedIn, username }) => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ refresh: refresh_token }),
+                credentials: 'include', // Send cookies (HttpOnly refresh_token will be sent automatically)
             });
 
             if (response.ok) {
@@ -36,7 +34,6 @@ const Header = ({ isLoggedIn, username }) => {
         localStorage.removeItem('access');
         localStorage.removeItem('username');
         setIsLoggedIn(false);
-        setUsername('');
         navigate('/');
     };
     return (

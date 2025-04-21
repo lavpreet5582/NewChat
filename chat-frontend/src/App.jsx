@@ -21,11 +21,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LoginPage onLogin={() => setIsLoggedIn(true)} />} />
+      <Route path="/login" element={<LoginPage onLogin={() => setIsLoggedIn(true)} />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/chat" element={
+      <Route path="/" element={
         <ProtectedRoute>
-          <ChatPage username={username} />
+          <ChatPage username={username} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
         </ProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" />} />
