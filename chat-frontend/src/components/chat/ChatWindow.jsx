@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card, ListGroup, Form, Button } from 'react-bootstrap';
 import './ChatWindow.css'
 
@@ -7,6 +7,12 @@ const ChatWindow = ({ messages, message, setMessage, sendMessage }) => {
     //     sendMessage(message);
     //     setMessage('');
     // };
+    const messagesEndRef = useRef(null);
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const username = localStorage.getItem('username')
 
     const formatTimestamp = (timestamp) => {
         const date = new Date(timestamp);
@@ -19,25 +25,30 @@ const ChatWindow = ({ messages, message, setMessage, sendMessage }) => {
         return `${formattedHours}:${formattedMinutes} ${ampm}`;
     };
 
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     return (
         <Card className="chat-window-container">
             <Card.Body className="messages-area">
                 <ul className="message-list">
                     {messages.map((msg, index) => (
-                        <li key={index} className={`message-item ${msg.user === localStorage.getItem('username') ? 'sent' : 'received'}`}>
+                        <li key={index} className={`message-item ${msg.user.username === username ? 'sent' : 'received'}`}>
                             <div className="message-bubble">
                                 <div className="message-info">
-                                    <strong>{msg.user}</strong>
+                                    <strong>{msg.user.username}</strong>
                                 </div>
                                 <div className="message-text">
-                                    {msg.message}
-                                    <small className="px-2 bg-light text-muted timestamp">
+                                    {msg.content}
+                                    <small className="px-2 text-muted timestamp">
                                         {formatTimestamp(msg.timestamp)}
                                     </small>
                                 </div>
                             </div>
                         </li>
                     ))}
+                    <div ref={messagesEndRef} />
                 </ul>
             </Card.Body>
             <Card.Footer className="input-area">

@@ -4,17 +4,39 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import ChatWindow from './ChatWindow';
 import Footer from './Footer';
+import { fetchWithAuth } from '../../services/auth'
 
-const ChatPage = ({ username, isLoggedIn, setIsLoggedIn }) => {
+const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [socket, setSocket] = useState(null);
     const [channel, setChannel] = useState('General');
     const [isSocketOpen, setIsSocketOpen] = useState(false);  // Track if the socket is open
-
+    const [error, setError] = useState('');
+    const token = localStorage.getItem('access');
     // Function to establish the socket connection
+
+    const fetchMessages = async () => {
+        try {
+            const response = await fetchWithAuth(`http://localhost:8000/chat/api/messages/${channel}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch channels.");
+            }
+
+            const data = await response.json();
+            setMessages(data);
+        } catch (error) {
+            setError("Error fetching channels: " + error.message);
+        }
+    };
+
     const connectSocket = (channel) => {
-        const token = localStorage.getItem('access');
         if (!token) return;
         // Create a new WebSocket connection
         const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${channel}/?token=${token}`);
@@ -49,29 +71,38 @@ const ChatPage = ({ username, isLoggedIn, setIsLoggedIn }) => {
             // Close the previous socket before changing the channel
             if (socket) {
                 socket.close();
+                setIsSocketOpen(false)
             }
+
             setChannel(newChannel);
         }
     };
 
     // Establish the socket connection when the component mounts or the channel changes
     useEffect(() => {
-        // If the socket is not open, create a new socket
+        // Establish socket connection
         if (!isSocketOpen) {
             connectSocket(channel);
         }
 
-        // Cleanup the socket connection when the component unmounts or when the channel changes
+        // Fetch chat messages
+        const fetchMsg = async () => {
+            await fetchMessages();
+        };
+        fetchMsg();
+
+        // Cleanup socket when channel changes or component unmounts
         return () => {
             if (socket) {
                 socket.close();
             }
         };
-    }, [channel]); // Dependency only on channel change
+    }, [channel]);
+
 
     return (
         <div className="app-container">
-            <Header isLoggedIn={isLoggedIn} username={username} setIsLoggedIn={setIsLoggedIn} />
+            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Container fluid className="main-container">
                 <Sidebar changeChannel={changeChannel} currentChannel={channel} />
                 <ChatWindow

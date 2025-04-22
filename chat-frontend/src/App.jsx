@@ -8,14 +8,11 @@ import ProtectedRoute from './components/auth/ProtectedRoute'; // Optional, expl
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
 
   useEffect(() => {
     const token = localStorage.getItem('access');
-    const user = localStorage.getItem('username');
     if (token) {
       setIsLoggedIn(true);
-      setUsername(user);
     }
   }, []);
 
@@ -25,7 +22,7 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/" element={
         <ProtectedRoute>
-          <ChatPage username={username} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+          <ChatPage setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
         </ProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" />} />

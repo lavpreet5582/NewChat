@@ -50,7 +50,7 @@ class MessageHistoryView(generics.ListAPIView):
 
     def get_queryset(self):
         channel_name = self.kwargs["channel_name"]
-        return Message.objects.filter(channel__name=channel_name).order_by("-timestamp")
+        return Message.objects.filter(channel__name=channel_name).order_by("timestamp")
 
 
 # 5️⃣ Check user presence (online/offline)

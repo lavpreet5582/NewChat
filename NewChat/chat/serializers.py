@@ -1,12 +1,7 @@
+from django.utils.timezone import localtime
 from rest_framework import serializers
 from .models import Channel, Message
-from accounts.models import User
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "email"]
+from accounts.serializers import UserSerializer
 
 
 class ChannelSerializer(serializers.ModelSerializer):

@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from accounts.serializers import RegisterSerializer
+from accounts.serializers import RegisterSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -85,3 +84,11 @@ class TokenRefreshWithCookieView(APIView):
             return Response({"access": str(access_token)}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
