@@ -90,12 +90,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_message(self, user, message):
         from .models import Channel, Message
+        from django.core.exceptions import PermissionDenied
 
         try:
+            # Get the channel the user is trying to send a message to
             channel = Channel.objects.get(name=self.room_name)
+
+            # Check if the user is a member of the channel
+            if not channel.members.filter(id=user.id).exists():
+                raise PermissionDenied("You do not belong to this group.")
+
         except Channel.DoesNotExist:
             logger.error(f"Channel {self.room_name} does not exist.")
             return
 
+        # Save the message if everything is valid
         Message.objects.create(user=user, channel=channel, content=message)
         logger.info(f"Message saved: {message}")

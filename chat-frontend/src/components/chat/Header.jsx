@@ -54,8 +54,9 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
             }
 
             const data = await response.json();
-            localStorage.setItem("user", data)
+            localStorage.setItem("user", JSON.stringify(data))
             localStorage.setItem("username", data.username)
+            setUsername(data.username)
         } catch (error) {
             console.error("user details error:", error);
         }

@@ -4,35 +4,8 @@ import { ListGroup } from 'react-bootstrap';
 import { fetchWithAuth } from '../../services/auth';
 import './Sidebar.css'
 
-const Sidebar = ({ changeChannel, currentChannel }) => {
+const Sidebar = ({ changeChannel, currentChannel, channels }) => {
 
-    const [channels, setChannels] = useState([]);
-    const [error, setError] = useState("");
-
-    // Fetch the list of channels when the component mounts
-    useEffect(() => {
-        getChannelsList();
-    }, []);
-
-    const getChannelsList = async () => {
-        try {
-            const response = await fetchWithAuth("http://localhost:8000/chat/api/channels/", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch channels.");
-            }
-
-            const data = await response.json();
-            setChannels(data);
-        } catch (error) {
-            setError("Error fetching channels: " + error.message);
-        }
-    };
     return (
         <div className='sidebar'>
             <div className="p-3">

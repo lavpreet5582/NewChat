@@ -41,6 +41,8 @@ const ChatWindow = ({ messages, message, setMessage, sendMessage }) => {
                                 </div>
                                 <div className="message-text">
                                     {msg.content}
+                                </div>
+                                <div className='timestamp-container'>
                                     <small className="px-2 text-muted timestamp">
                                         {formatTimestamp(msg.timestamp)}
                                     </small>

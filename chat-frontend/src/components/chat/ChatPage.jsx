@@ -10,7 +10,8 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [socket, setSocket] = useState(null);
-    const [channel, setChannel] = useState('General');
+    const [channels, setChannels] = useState([]);
+    const [channel, setChannel] = useState(null);
     const [isSocketOpen, setIsSocketOpen] = useState(false);  // Track if the socket is open
     const [error, setError] = useState('');
     const token = localStorage.getItem('access');
@@ -74,24 +75,60 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
                 setIsSocketOpen(false)
             }
 
+            localStorage.setItem("channel", newChannel)
             setChannel(newChannel);
         }
     };
 
-    // Establish the socket connection when the component mounts or the channel changes
+    // Fetch the list of channels when the component mounts
+
     useEffect(() => {
-        // Establish socket connection
+        const getChannelsList = async () => {
+            try {
+                const response = await fetchWithAuth("http://localhost:8000/chat/api/channels/", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch channels.");
+                }
+
+                const data = await response.json();
+                setChannels(data);
+
+                // Check if a channel is already stored
+                const savedChannel = localStorage.getItem('channel');
+
+                if (savedChannel) {
+                    setChannel(savedChannel);
+                } else if (data.length > 0) {
+                    setChannel(data[0].name);
+                    localStorage.setItem('channel', data[0].name);
+                }
+
+            } catch (error) {
+                setError("Error fetching channels: " + error.message);
+            }
+        };
+
+        getChannelsList();
+    }, []);
+
+    useEffect(() => {
+        if (!channel) return;
+
         if (!isSocketOpen) {
             connectSocket(channel);
         }
 
-        // Fetch chat messages
         const fetchMsg = async () => {
             await fetchMessages();
         };
         fetchMsg();
 
-        // Cleanup socket when channel changes or component unmounts
         return () => {
             if (socket) {
                 socket.close();
@@ -100,11 +137,12 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     }, [channel]);
 
 
+
     return (
         <div className="app-container">
             <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Container fluid className="main-container">
-                <Sidebar changeChannel={changeChannel} currentChannel={channel} />
+                <Sidebar changeChannel={changeChannel} currentChannel={channel} channels={channels} />
                 <ChatWindow
                     messages={messages}
                     message={message}

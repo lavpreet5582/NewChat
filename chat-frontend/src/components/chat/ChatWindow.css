@@ -36,40 +36,46 @@
   border-top: 1px solid #ddd;
 }
 
+.timestamp-container {
+  justify-self: flex-end;
+}
 
 
 /* Styling for message text */
-.chat-window .message-text {
-  padding: 10px;
+.chat-window-container .message-text {
+  padding: 5px;
   border-radius: 8px;
-  max-width: 70%;
-  margin-bottom: 10px;
+  /* max-width: 70%; */
+  /* margin-bottom: 10px; */
   position: relative;
-  background-color: #f1f1f1;
+  /* background-color: #e8edf1; */
+  font-weight: 500;
+  color: #2f3e46;
   /* Default background color */
 }
 
 /* Align timestamp on the right */
-.chat-window .timestamp {
+.chat-window-container .timestamp {
   font-size: 0.8rem;
-  color: gray;
-  position: absolute;
+  color: #6c757d;
+  /* position: absolute; */
   right: 10px;
   /* Position the timestamp at the right of the message */
   bottom: 5px;
+  align-self: flex-end;
   /* Give some space from the bottom of the message */
 }
 
 /* Sent messages styling */
-.chat-window .message-item.sent .message-text {
-  background-color: #d1eaff;
+.chat-window-container .message-item.received .message-text {
+  /* background-color: #ffffff; */
   /* Light blue background for sent messages */
   align-self: flex-end;
 }
 
 /* Received messages styling */
-.chat-window .message-item.received .message-text {
-  background-color: #f1f1f1;
+.chat-window-container .message-item.sent .message-text {
+  /* background-color: #cce5ff; */
   /* Light gray background for received messages */
   align-self: flex-start;
 }
@@ -78,7 +84,7 @@
 .message-bubble {
   display: inline-block;
   padding: 10px;
-  background-color: #e0e0e0;
+  background-color: #e8edf1;
   border-radius: 10px;
   max-width: 70%;
   word-wrap: break-word;

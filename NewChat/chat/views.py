@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
@@ -11,14 +11,16 @@ from .serializers import MessageSerializer, ChannelSerializer
 User = get_user_model()
 
 
-# 1️⃣ List all chat channels
-class ChannelListView(generics.ListAPIView):
-    """API to list all chat channels"""
+class ChannelListView(APIView):
+    """API to list all chat channels where the user is a member"""
 
-    queryset = Channel.objects.all()
-    serializer_class = ChannelSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
+        channels = Channel.objects.filter(members=user)
+        serializer = ChannelSerializer(channels, many=True)
+        return Response(serializer.data)
 
 
 # 3️⃣ Send a message to a channel
@@ -41,16 +43,17 @@ class SendMessageView(APIView):
         return Response(MessageSerializer(message).data, status=201)
 
 
-# 4️⃣ Fetch chat history for a specific channel
-class MessageHistoryView(generics.ListAPIView):
+class MessageHistoryView(APIView):
     """API to fetch message history for a channel"""
 
-    serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        channel_name = self.kwargs["channel_name"]
-        return Message.objects.filter(channel__name=channel_name).order_by("timestamp")
+    def get(self, request, channel_name):
+        messages = Message.objects.filter(channel__name=channel_name).order_by(
+            "timestamp"
+        )
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 5️⃣ Check user presence (online/offline)
