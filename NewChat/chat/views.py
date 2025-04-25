@@ -12,12 +12,16 @@ User = get_user_model()
 
 
 # 1️⃣ List all chat channels
-class ChannelListView(generics.ListAPIView):
-    """API to list all chat channels"""
+class ChannelListView(APIView):
+    """API to list all chat channels where the user is a participant"""
 
-    queryset = Channel.objects.all()
-    serializer_class = ChannelSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        channels = Channel.objects.filter(members=user)
+        serializer = ChannelSerializer(channels, many=True)
+        return Response(serializer.data)
 
 
 
