@@ -1,29 +1,38 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Secret Key from environment variable, with a default fallback
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key")
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 TIME_ZONE = "Asia/Kolkata"
 USE_TZ = True  # Keep this True if you're using timezone-aware datetimes
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "CSRF_TRUSTED_ORIGINS", "http://localhost,http://127.0.0.1"
+).split(",")
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins (Use cautiously in production)
+CORS_ALLOW_ALL_ORIGINS = (
+    os.getenv("CORS_ALLOW_ALL_ORIGINS", "True") == "True"
+)  # Allow all origins (Use cautiously in production)
 
 # OR restrict to specific origins
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React's default Vite server
-    "http://127.0.0.1:5173",
-]
+CORS_ALLOWED_ORIGINS = os.getenv(
+    "CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+).split(",")
 
-CORS_ALLOW_CREDENTIALS = True  # Allow sending cookies with requests
+CORS_ALLOW_CREDENTIALS = (
+    os.getenv("CORS_ALLOW_CREDENTIALS", "True") == "True"
+)  # Allow sending cookies with requests
 
 
 INSTALLED_APPS = [
@@ -37,7 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
-    'rest_framework_simplejwt.token_blacklist',
+    "rest_framework_simplejwt.token_blacklist",
     "channels",
     "accounts",
     "chat",
@@ -77,22 +86,26 @@ TEMPLATES = [
 ASGI_APPLICATION = "config.asgi.application"
 WSGI_APPLICATION = "config.wsgi.application"
 
+# Database settings from environment variables
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "chat_db",
-        "USER": "chat_user",
-        "PASSWORD": "chat@admin",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.getenv("DB_NAME", "chat_db"),
+        "USER": os.getenv("DB_USER", "chat_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "chat@admin"),
+        "HOST": os.getenv("DB_HOST", "localhost"),  # matches docker-compose service name
+        "PORT": os.getenv("DB_PORT", "5432"),  # must match container port
     }
 }
 
+# Channel layers for Redis
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [
+                (os.getenv("REDIS_HOST", "127.0.0.1"), os.getenv("REDIS_PORT", 6379))
+            ],
         },
     }
 }
@@ -106,10 +119,8 @@ REST_FRAMEWORK = {
 }
 
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static")
-# ]  # Optional if you have a 'static' folder
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # Required for collectstatic
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 

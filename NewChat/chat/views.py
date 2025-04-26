@@ -11,8 +11,9 @@ from .serializers import MessageSerializer, ChannelSerializer
 User = get_user_model()
 
 
+# 1️⃣ List all chat channels
 class ChannelListView(APIView):
-    """API to list all chat channels where the user is a member"""
+    """API to list all chat channels where the user is a participant"""
 
     permission_classes = [permissions.IsAuthenticated]
 
@@ -21,6 +22,7 @@ class ChannelListView(APIView):
         channels = Channel.objects.filter(members=user)
         serializer = ChannelSerializer(channels, many=True)
         return Response(serializer.data)
+
 
 
 # 3️⃣ Send a message to a channel
