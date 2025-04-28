@@ -2,3 +2,4 @@
 __pycache__/
 node_modules
 chat_env/
+.env
