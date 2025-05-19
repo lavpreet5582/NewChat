@@ -15,11 +15,14 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const [isSocketOpen, setIsSocketOpen] = useState(false);  // Track if the socket is open
     const [error, setError] = useState('');
     const token = localStorage.getItem('access');
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+    const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws/chat/"; // WebSocket URL
     // Function to establish the socket connection
 
     const fetchMessages = async () => {
         try {
-            const response = await fetchWithAuth(`http://localhost:8000/chat/api/messages/${channel}`, {
+            
+            const response = await fetchWithAuth(`${backendUrl}/chat/api/messages/${channel}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -40,7 +43,7 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const connectSocket = (channel) => {
         if (!token) return;
         // Create a new WebSocket connection
-        const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${channel}/?token=${token}`);
+        const newSocket = new WebSocket(`${wsUrl}/chat/${channel}/?token=${token}`);
 
         newSocket.onopen = () => {
             console.log(`Connected to channel ${channel}`);
@@ -85,7 +88,7 @@ const ChatPage = ({ isLoggedIn, setIsLoggedIn }) => {
     useEffect(() => {
         const getChannelsList = async () => {
             try {
-                const response = await fetchWithAuth("http://localhost:8000/chat/api/channels/", {
+                const response = await fetchWithAuth(`${backendUrl}/chat/api/channels/`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

@@ -9,12 +9,13 @@ import { fetchWithAuth } from "../../services/auth";
 const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     const navigate = useNavigate();
     const [username, setUsername] = useState(localStorage.getItem("username") || '')
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
     const handleLogout = async () => {
         const token = localStorage.getItem('access');
         try {
             // Optional: Call backend logout endpoint
-            const response = await fetch('http://localhost:8000/accounts/api/logout/', {
+            const response = await fetch(`${backendUrl}/accounts/api/logout/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -42,7 +43,8 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
 
     const fetchUser = async () => {
         try {
-            const response = await fetchWithAuth(`http://localhost:8000/accounts/api/user-details/`, {
+            console.log(backendUrl + "-> Backend url");
+            const response = await fetchWithAuth(`${backendUrl}/accounts/api/user-details/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

@@ -1,7 +1,8 @@
 export const getAccessToken = () => localStorage.getItem("access");
 
 export const refreshToken = async () => {
-  const res = await fetch("http://localhost:8000/api/token/refresh/", {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+  const res = await fetch(`${backendUrl}/api/token/refresh/`, {
     method: "POST",
     credentials: "include", // ✅ Send cookies including HttpOnly refresh token
     headers: {

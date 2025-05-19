@@ -10,11 +10,12 @@ const SignupPage = ({ onSignup }) => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate()
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const response = await fetch("http://localhost:8000/accounts/api/register/", {
+        const response = await fetch(`${backendUrl}/accounts/api/register/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

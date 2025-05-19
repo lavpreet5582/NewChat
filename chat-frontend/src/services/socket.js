@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
-
-const SOCKET_URL = "ws://localhost:8000/ws/chat/";
+const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws/chat/"; // WebSocket URL
+const SOCKET_URL = `${wsUrl}/chat/`;
 
 
 export const socket = (channel_name, token) => {

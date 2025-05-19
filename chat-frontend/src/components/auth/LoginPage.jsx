@@ -8,6 +8,7 @@ const LoginPage = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,7 +19,7 @@ const LoginPage = ({ onLogin }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/accounts/api/token/", {
+      const response = await fetch(`${backendUrl}/accounts/api/token/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

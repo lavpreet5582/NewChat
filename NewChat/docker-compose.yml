@@ -5,8 +5,14 @@ services:
     command: /wait-for-it.sh postgres:5432 -- /app/setup.sh  # Run the script for migrations and superuser creation
     volumes:
       - .:/app  # Mount the current directory to /app inside the container
-    expose:
-      - "8000"
+    # expose:
+    #   - "8000"
+    ports:
+      - "8000:8000"
+
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - redis
       - postgres
